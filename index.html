@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+	<html class="sl-root base export loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Aplicaciones de Alta disponiblidad: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+	</head>
+	<body class="reveal-viewport theme-font-opensans theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section><div class="sl-block" data-block-type="image" data-block-id="980ac7d3dbabef5a9b8992477c5bbe98" style="min-width: 30px; min-height: 30px; width: 988.444444444444px; height: 556px; left: -44px; top: 56px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="1024" data-natural-height="576" data-src="calidev-alta-disponibilidad/1579106-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 111px; top: 121px; height: auto;" data-block-id="9f92908fefbef95105575fceddfb51d1"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>About Me</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 697px; left: 292px; top: 210px; height: auto;" data-block-id="7b8a4b8ead83237d2e3282f7554a2095"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>Desarrollador de Software.</li>
+	<li>15+ años desarrollo web.</li>
+	<li>Cofounder Django Cali.</li>
+	<li>Python/Django Evangelist.</li>
+	<li>Emprendedor.</li>
+	<li>Software developer inQbation Labs</li>
+	<li>@andresgz00</li>
+	<li>www.andresgonzalez.co</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="459318910f95b2f8c0a41f085ec23b00" style="min-width: 30px; min-height: 30px; width: 360px; height: 347.684210526316px; left: 12px; top: 121px;"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="380" data-natural-height="367" data-src="calidev-alta-disponibilidad/1581114-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 190px; height: auto;" data-block-id="df2d84571324b80d3ffb262664b52f60"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Agenda</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 81px; top: 316px; height: auto;" data-block-id="64183079384d7c83a8b30b61bc02f3c5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li>Requerimientos</li>
+	<li>Consideraciones de diseño.</li>
+	<li>Arquitectura para alta disponibilidad.</li>
+	<li>Ejemplos de arquitecturas.</li>
+</ul>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 888px; left: 28px; top: 270px; height: auto;" data-block-id="b1f8ab8b0ffa65f8bfda8d0dd54d6db5"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Diseño de la aplicación</h1>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 74px; top: 111px; height: auto;" data-block-id="952a1d5bbbf9d7b04c047f0d108ad705"><div class="sl-block-content fragment" data-placeholder-tag="h2" data-placeholder-text="Title Text" data-fragment-index="0">
+<h2>Lo básico</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 264px; height: auto;" data-block-id="6092053bb106786cb8cd4ccbce5c44f3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" data-fragment-index="1">Evitar Consultas lentas a la BD.</li>
+	<li class="fragment" data-fragment-index="2">Evitar operaciones de lectura lenta (Archivos, API).</li>
+	<li class="fragment" data-fragment-index="3">La Caché es tu amiga.</li>
+	<li class="fragment" data-fragment-index="4">Evitar timeouts por procesamiento: Encoladores.</li>
+	<li class="fragment" data-fragment-index="5">Menor cantidad de peticiones a recursos (JS, CSS).</li>
+	<li class="fragment" data-fragment-index="6">Minify lo que más se pueda.</li>
+</ul>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 716px; left: 106px; top: 49px;" data-block-id="93b6f547bba2c82907617b01a02457e6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<h1>Consultas lentas</h1>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 850px; height: 490px; left: 31px; top: 140px;" data-block-id="0853baaff6ab89fd6707a90dcbbbf600"><div class="sl-block-content" style="z-index: 12;"><pre><code># :(
+def check_for_me(self):
+    users = Users.objects.filter(role='developer')
+    for el in users:
+        # This would execute a db query
+        # each iteration
+        prof = el.profile
+        if prof.real_name is 'Andres':
+            return True
+        return False
+
+</code></pre></div></div></section><section>
+<div class="sl-block" data-block-type="code" style="width: 850px; height: 490px; left: 29px; top: 98px;" data-block-id="d5019a5d6134bd244311919daa6334a1"><div class="sl-block-content" style="z-index: 12;"><pre><code># :)
+def check_for_me(self):
+    # This is 'lazy'
+    users = Users.objects.filter(role='developer')
+    users = users.select_related('profile')
+    for el in users:
+        # This would NOT execute an additional db query
+        prof = el.profile
+        if prof.real_name is 'Andres':
+            return True
+        return False</code></pre></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 270px; height: auto;" data-block-id="e2f6b5d1dab4f6e22330129998e6190b"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Es suficiente?</h1>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 74px; top: 70px; height: auto;" data-block-id="8b1fd387e0d88743ba42ed661f5cb7f8"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>12Factor.net</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 770px; left: 79px; top: 157px; height: auto;" data-block-id="c11b9f6ecec7dc8caff06fad8469a49c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<blockquote>
+<ul>
+	<li style="text-align:left"><span style="font-size:1.0em">Use <strong>declarative</strong> formats for setup automation.</span></li>
+	<li><span style="font-size:1.0em">Have a <strong>clean contract</strong> with the underlying operating system, offering <strong>maximum portability</strong> between execution environments;</span></li>
+	<li><span style="font-size:1.0em">Are suitable for <strong>deployment</strong> on modern <strong>cloud platforms</strong>,</span></li>
+	<li><span style="font-size:1.0em"><strong>Minimize divergence</strong> between development and production, enabling <strong>continuous deployment</strong> for maximum agility;</span></li>
+	<li><span style="font-size:1.0em">And can <strong>scale up</strong> without significant changes to tooling, architecture, or development practices.</span></li>
+</ul>
+</blockquote>
+</div></div></section><section><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 501px; height: 375.75px; left: 220px; top: 150px;" data-block-id="48317bb78c1ff3d6b2e3ec5513f4770b"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="640" data-natural-height="480" data-src="calidev-alta-disponibilidad/1582056-meme.jpg"></div></div></section><section><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 34px; top: 70px;" data-block-id="9a4da18aa5ebdf309f35668c9f0ca787"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<h2>En pocas palabras...</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 871px; left: 58px; top: 157px;" data-block-id="4394715e96fd3b9fc7165565e851b048"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 90%;">
+<p style="text-align:left"><strong>Codebase</strong>: Código base seguido por Control de versiones, Muchos deployments<br>
+<strong>Dependencias</strong>: Declarar dependencias explícitamente<br>
+<strong>Configuración</strong>: Almacenar configuración en el entorno</p>
+
+<p style="text-align:left"><strong>Backing Services:</strong> Treat backing services as attached resources<br>
+<strong>Desarrollar, liberar, ejecutar:</strong> Separar las etapas de desarrollo.<br>
+<strong>Procesos: </strong>Ejecutar aplicaciones como uno o más procesos "stateless".<br>
+<strong>Port binding:</strong> Servicios via "port binding"<br>
+<strong>Concurrencia</strong>: Scale out via the process model<br>
+<strong><span style="text-align:left">Desechabilidad</span></strong>: Fast startup, graceful shutdown<br>
+<strong>Dev/prod parity:</strong> Desarrollo, staging, y producción iguales.</p>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 295px;" data-block-id="38765957db21503789161c6cd7c37ae6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li style="text-align: left;">1 Servidor</li>
+	<li style="text-align: left;">Guardando imágenes en el sistema de archivos local (Old School)</li>
+	<li style="text-align: left;">Obtienes mucho tráfico</li>
+	<li style="text-align: left;">Qué haces?</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 170px; top: 140px;" data-block-id="91018adb5dec1dd62f53e3701fb5fcba"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<h2>Escenario 1:</h2>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 31px; top: 135px;" data-block-id="998f699ceab685303cfe8fdbb1c76aa9"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-fragment-index="0">
+<h3 style="text-align: left;">Ni siquiera pienses en guardar cosas en el servidor de la aplicación!</h3>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 360px; height: 348.3px; left: 511px; top: 246px;" data-block-id="0ab92040385a1605049188ffeb072b5b"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="1"><img style="" data-natural-width="400" data-natural-height="387" data-src="calidev-alta-disponibilidad/1582114-meme2.jpg"></div></div></section><section><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 79px;" data-block-id="b9f2c62206fc82d6020f5640679fe051"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<h1>Por qué?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 146px; top: 234px;" data-block-id="7118cbd19f940fb7713554ff7396eb55"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li style="text-align:left">Escalamiento Vertical  no es una buena solución a largo plazo</li>
+	<li style="text-align:left">Redundancia: Realmente queremos todo en un único servidor</li>
+	<li style="text-align:left">"State is your worst enemy"</li>
+	<li style="text-align:left">"Kill all the servers!"</li>
+	<li style="text-align:left">Freedom</li>
+	<li style="text-align:left">Containers</li>
+</ul>
+</div></div></section><section><div class="sl-block" data-block-type="text" data-block-id="e342bf10ca5b0b03402811f634a3308f" style="height: auto; min-width: 30px; min-height: 30px; width: 920px; left: 40px; top: 231px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 214%;" data-fragment-index="0">
+<p>Construyamos una aplicación</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="1209ea1d3ff989c7b24cc4e81d2f8659" style="height: auto; min-width: 30px; min-height: 30px; width: 731px; left: 115px; top: 370px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 200%;" data-fragment-index="1">
+<p>Altamente disponible!</p>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 26px; top: 89px; height: auto;" data-block-id="9e34f6d824b07ff6e01c9059962c0249"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Consideraciones</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 72px; top: 253px; height: auto;" data-block-id="822cdd0b73866cd1445e35f5efacdc03"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ol>
+	<li class="fragment" data-fragment-index="0">Diseñar para fallas.</li>
+	<li class="fragment" data-fragment-index="1">Multiples Zonas de disponibilidad.</li>
+	<li class="fragment" data-fragment-index="2">Escalamiento.</li>
+	<li class="fragment" data-fragment-index="3">Auto-Curación</li>
+	<li class="fragment" data-fragment-index="4">Desacoplamiento.</li>
+</ol>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="ae65bf86fcabbdc1e195532750c8a0d5" style="min-width: 30px; min-height: 30px; width: 807.212121212121px; height: 380px; left: 73px; top: 160px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="1402" data-natural-height="660" style="" data-src="calidev-alta-disponibilidad/1581223-2.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="72f112a2760d194e56a741ebe0ba2355" style="min-width: 30px; min-height: 30px; width: 360px; height: 316.153846153846px; left: 259px; top: 185px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="312" data-natural-height="274" data-src="calidev-alta-disponibilidad/1581184-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="3404725cea4d7e758b84bb488d8fb6a6" style="min-width: 30px; min-height: 30px; width: 403.583333333333px; height: 334px; left: 236px; top: 170px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="377" data-natural-height="312" data-src="calidev-alta-disponibilidad/1581187-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="c719a7f93015b3ee616d7bd2fbba0fbf" style="min-width: 30px; min-height: 30px; width: 586.339950372209px; height: 445px; left: 186px; top: 115px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="531" data-natural-height="403" data-src="calidev-alta-disponibilidad/1581190-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 54px; top: 272px; height: auto;" data-block-id="a175fdb326f5cadba5b1fb0d7c9a17b0"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>1. Diseñar para fallas</h1>
+</div></div></section><section><div class="sl-block" data-block-type="text" data-block-id="33a47e8937190f8fff1b8f34d051ba72" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 160px; top: 265px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<p><span style="font-size:1.4em">"Everything fails all the time"</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="b603712d1a8245f4ecf457a9cfaed958" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 368px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; text-align: right;">
+<p>Werner Vogels</p>
+
+<p>CTO de Amazon</p>
+</div></div></section><section><div class="sl-block" data-block-type="text" data-block-id="d752a502c916c613126ffa40f6d29c29" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 30px; top: 184px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10;">
+<ul>
+	<li class="fragment" data-fragment-index="1">Evitar los puntos de falla únicos.</li>
+	<li class="fragment" data-fragment-index="1">Asumir que todo falla. </li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="bf0d0cdc6901551d4852cd9e1e6400bb" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 291px; top: 465px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-fragment-index="2">
+<p>Las aplicaciones deben continuar funcionando</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="c264b88005b1cbcaf2d219bde5753497" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 260px; top: 380px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 150%;" data-fragment-index="2">
+<p><span style="font-size:1.4em">META</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 40px; top: 59px;" data-block-id="00261e0bf0b7bf2f16154b512f04ce62"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 150%;" data-fragment-index="0">
+<p><span style="font-size:1.4em">Consideraciones</span></p>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="0ea49790a5479ec43d23211e8517d12b" style="min-width: 30px; min-height: 30px; width: 786.942917547569px; height: 512px; left: 71px; top: 78px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="727" data-natural-height="473" data-src="calidev-alta-disponibilidad/1581285-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="3d7c93e4b24662025b10930ac5ad6c0f" style="min-width: 30px; min-height: 30px; width: 771px; height: 529.095988538682px; left: 74px; top: 70px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="698" data-natural-height="479" data-src="calidev-alta-disponibilidad/1581291-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="12228def9cf86f7b3c7c9ab079500bf9" style="min-width: 30px; min-height: 30px; width: 814.376470588235px; height: 556px; left: 73px; top: 52px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="747" data-natural-height="510" data-src="calidev-alta-disponibilidad/1581316-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="61db9a30c6f1416d39c56b4f0ff1bad8" style="min-width: 30px; min-height: 30px; width: 761.84854368932px; height: 536px; left: 90px; top: 76px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="732" data-natural-height="515" data-src="calidev-alta-disponibilidad/1581321-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" data-block-id="16bb2c4c484a121f4bce4cdde5239505" style="height: auto; min-width: 30px; min-height: 30px; width: 707px; left: 105px; top: 309px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 150%;">
+<p><span style="font-size:1.4em">2. Múltiples Zonas de disponibilidad</span></p>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="9bf79f20ade8509f3230e545a2924c4a" style="min-width: 30px; min-height: 30px; width: 879.872068230277px; height: 470px; left: 29px; top: 90px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="878" data-natural-height="469" data-src="calidev-alta-disponibilidad/1581414-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="656c9294b7c11f59df017daa10db9546" style="min-width: 30px; min-height: 30px; width: 878.307368421053px; height: 452px; left: 24px; top: 108px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="923" data-natural-height="475" data-src="calidev-alta-disponibilidad/1581419-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="b5fb1d6e76ee49a8036e17f1405f0445" style="min-width: 30px; min-height: 30px; width: 798.41975308642px; height: 516px; left: 48px; top: 92px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="752" data-natural-height="486" style="" data-src="calidev-alta-disponibilidad/1581340-pasted-from-clipboard.png"></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="89c3f0dffaddc5ff0b3a5c021433dbc0" style="height: auto; min-width: 30px; min-height: 30px; width: 754px; left: 62px; top: 53px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 200%;">
+<p>Multiple Availability Zones</p>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 270px; height: auto;" data-block-id="b8e67e260fb60e377ef889da2a128793"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" dir="ui" style="z-index: 10;">
+<h1>3. Escalamiento</h1>
+</div></div></section><section><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 910.3448275862069px; height: 495px; left: 25px; top: 84px;" data-block-id="b056ba3f83cb36fb19b44b943d391445"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="1600" data-natural-height="870" data-src="calidev-alta-disponibilidad/1582807-elastic1.png"></div></div></section><section><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 960px; height: 525.6px; left: 0px; top: 88px;" data-block-id="d88b2d6059100cf14c8483526cd86451"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="1600" data-natural-height="876" data-src="calidev-alta-disponibilidad/1582809-elastic2.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="7c6f8095c15e04c2560f97f23bfa32a6" style="min-width: 30px; min-height: 30px; width: 866px; height: 519.825520833333px; left: 25px; top: 90px;"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="768" data-natural-height="461" style="" data-src="calidev-alta-disponibilidad/1581432-pasted-from-clipboard.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 169px; top: 38px;" data-block-id="65a09fe185ba21c235393c92c60e0610"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 150%;" data-fragment-index="0">
+<p><span style="font-size:1.4em">AutoEscalamiento</span></p>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="78f7e040b42d82203525ca1c19af5021" style="min-width: 30px; min-height: 30px; width: 839px; height: 493.281407035176px; left: 41px; top: 104px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="796" data-natural-height="468" style="" data-src="calidev-alta-disponibilidad/1581439-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="f83e8801ff025c22d574dcd3750833c3" style="min-width: 30px; min-height: 30px; width: 896.837782340862px; height: 488px; left: 20px; top: 100px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="895" data-natural-height="487" data-src="calidev-alta-disponibilidad/1581444-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 270px; height: auto;" data-block-id="0cece999ac4c90a6f2d0cc1228fc6af6"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>3. Auto-curación</h1>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="aca73c726f7797510a600400f3b00294" style="min-width: 30px; min-height: 30px; width: 869.503816793893px; height: 545px; left: 33px; top: 70px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="836" data-natural-height="524" data-src="calidev-alta-disponibilidad/1581475-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 270px; height: auto;" data-block-id="7503f60ee6a90ede97b6ff044b36887b"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>5. Desacoplamiento</h1>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 73px; top: 180px; height: auto;" data-block-id="1b8eeaed1fd61368235e40adef52e3de"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<pre><span style="font-size:1.4em">Un sistema desacoplado es más fácil de escalar</span></pre>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="811ef2af2f4232e781dc929fd5900c38" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 361px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; text-align: left;">
+<p>Entre menos acoplados estén los componentes, más fácilmente se pueden escalar y más tolerantes a fallas se vuelven  </p>
+</div></div></section><section><div class="sl-block" data-block-type="image" data-block-id="6374945fd4537669354bd36cf34b9329" style="min-width: 30px; min-height: 30px; width: 849.653767820774px; height: 510px; left: 38px; top: 70px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="818" data-natural-height="491" data-src="calidev-alta-disponibilidad/1581487-pasted-from-clipboard.png"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 270px; height: auto;" data-block-id="097a9702d507417ec32945bc0a16d690"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Gracias!</h1>
+
+<p>@calidevco</p>
+</div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 70px; top: 66px; height: auto;" data-block-id="1c67301b65ff17822e290b93e5bb7459"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Referencias</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 7px; top: 223px; height: auto;" data-block-id="c93fb3184c8b50eb97778f30bfdeae3d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>http://aws.amazon.com/es/architecture/</li>
+	<li>http://slides.com/juliangindi/deck#/10</li>
+	<li>http://es.slideshare.net/AmazonWebServices/presentations</li>
+</ul>
+</div></div></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":456543,"slug":"calidev-alta-disponibilidad","title":"Aplicaciones de Alta disponiblidad","description":"","visibility":"all","published_at":"2015-07-16T03:22:53.664Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/secure/fa49f6/decks.jpg","view_count":1,"user":{"id":354571,"username":"andresgz","name":"Andres Gonzalez","description":"","thumbnail_url":"https://lh4.googleusercontent.com/-ywWfELmE-ms/AAAAAAAAAAI/AAAAAAAApnA/PoAJH207TsY/photo.jpg?sz=50","pro":true,"enterprise":false,"enterprise_manager":false,"settings":{"id":188241,"present_controls":true,"present_upsizing":true},"registered":true},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"opensans","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":true,"rolling_links":false,"center":false,"should_loop":false,"rtl":false,"version":2,"notes":{}}};
+			SLConfig.current_user = {
+				name: "Andres Gonzalez",
+				username: "andresgz",
+				pro: true
+			};
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+
+				autoSlide: SLConfig.deck.auto_slide_interval || 0,
+				autoSlideStoppable: true,
+
+				rolling_links: SLConfig.deck.rolling_links || true,
+				center: SLConfig.deck.center || false,
+				loop: SLConfig.deck.should_loop || false,
+				rtl: SLConfig.deck.rtl || false,
+
+				transition: SLConfig.deck.transition,
+				backgroundTransition: SLConfig.deck.background_transition,
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+			// Make Slides speaker notes available in the reveal.js speaker view
+			if( SLConfig.deck.notes ) {
+				[].forEach.call( document.querySelectorAll( '.reveal .slides section' ), function( slide ) {
+
+					var value = SLConfig.deck.notes[ slide.getAttribute( 'data-id' ) ];
+					if( value && typeof value === 'string' ) {
+						slide.setAttribute( 'data-notes', value );
+					}
+
+				} );
+			}
+		</script>
+
+		
+
+	</body>
+</html>
